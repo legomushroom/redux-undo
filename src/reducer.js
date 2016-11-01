@@ -206,10 +206,6 @@ export default function undoable (reducer, rawConfig = {}) {
           return history
         }
 
-        // insert before filtering because the previous action might not have
-        // been filtered and `insert` checks for `wasFiltered` anyway
-        history = insert(history, res, config.limit)
-
         if (typeof config.filter === 'function' && !config.filter(action, res, history)) {
           const nextState = {
             ...history,
@@ -220,6 +216,10 @@ export default function undoable (reducer, rawConfig = {}) {
           debug.end(nextState)
           return nextState
         }
+
+        // insert before filtering because the previous action might not have
+        // been filtered and `insert` checks for `wasFiltered` anyway
+        history = insert(history, res, config.limit)
 
         debug.log('inserted new state into history')
         debug.end(history)
